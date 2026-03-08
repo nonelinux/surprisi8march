@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поздравления 🌹</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ffc0cb 0%, #ff69b4 50%, #ff1493 100%);
+            min-height: 100vh;
+        }
+
+        /* Главная страница */
+        .main-page {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #fff5f7 0%, #ffe4e9 50%, #ffc0cb 100%);
+        }
+
+        .roses-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .rose {
+            position: absolute;
+            font-size: 2rem;
+            animation: fall linear forwards;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .rose::before {
+            content: attr(data-emoji);
+        }
+
+        .content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .greeting-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 900;
+            color: #d4165f;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            line-height: 1.2;
+        }
+
+        .greeting-subtitle {
+            font-size: 1.8rem;
+            color: #ff69b4;
+            margin-bottom: 50px;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff1493 0%, #ff69b4 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 20, 147, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #ff1493;
+            border: 2px solid #ff1493;
+        }
+
+        .btn-secondary:hover {
+            background: #ff1493;
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* Страница поздравлений */
+        .wishes-page {
+            width: 100%;
+            height: 100vh;
+            display: none;
+            flex-direction: column;
+            background: linear-gradient(135deg, #fff5f7 0%, #ffe4e9 100%);
+            overflow-y: auto;
+            padding: 40px 20px;
+        }
+
+        .wishes-page.active {
+            display: flex;
+        }
+
+        .wishes-page.sister {
+            background: linear-gradient(135deg, #ffe4f0 0%, #ffb3d9 100%);
+        }
+
+        .wishes-page.mom {
+            background: linear-gradient(135deg, #fff0e6 0%, #ffc299 100%);
+        }
+
+        .wishes-header {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: #ff1493;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            z-index: 15;
+        }
+
+        .back-btn:hover {
+            background: #d4165f;
+            transform: translateY(-2px);
+        }
+
+        .wishes-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: #d4165f;
+            margin-bottom: 30px;
+        }
+
+        .wishes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .wish-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(255, 20, 147, 0.15);
+            border-left: 5px solid #ff1493;
+            animation: slideIn 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .wish-card:nth-child(1) { animation-delay: 0.1s; }
+        .wish-card:nth-child(2) { animation-delay: 0.2s; }
+        .wish-card:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .wish-text {
+            font-size: 1.1rem;
+            color: #333;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .wish-author {
+            font-weight: 600;
+            color: #ff1493;
+            text-align: right;
+        }
+
+        /* Подарки */
+        .gifts-section {
+            margin-top: 60px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .gifts-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: #d4165f;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .gifts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .gift-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(255, 20, 147, 0.15);
+            transition: all 0.3s ease;
+            animation: slideIn 0.6s ease forwards;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .gift-card:nth-child(4) { animation-delay: 0.4s; }
+        .gift-card:nth-child(5) { animation-delay: 0.5s; }
+        .gift-card:nth-child(6) { animation-delay: 0.6s; }
+        .gift-card:nth-child(7) { animation-delay: 0.7s; }
+
+        .gift-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(255, 20, 147, 0.25);
+        }
+
+        .gift-emoji {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .gift-card:hover .gift-emoji {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        .gift-name {
+            font-weight: 700;
+            color: #333;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .gift-price {
+            color: #ff69b4;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* Розочки в верхнем углу */
+        .corner-roses {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 3rem;
+            z-index: 20;
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .greeting-title {
+                font-size: 2.5rem;
+            }
+
+            .greeting-subtitle {
+                font-size: 1.3rem;
+            }
+
+            .wishes-title {
+                font-size: 2rem;
+            }
+
+            .gifts-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Главная страница -->
+    <div class="main-page" id="mainPage">
+        <div class="corner-roses">🌷</div>
+        <div class="roses-container" id="rosesContainer"></div>
+        
+        <div class="content">
+            <h1 class="greeting-title">С 8 Марта! 🌷</h1>
+            <p class="greeting-subtitle">Выбери кого поздравить</p>
+            
+            <div class="button-container">
+                <button class="btn btn-primary" onclick="goToWishes('sister')">👯‍♀️ Поздравления для СЕСТРЫ</button>
+                <button class="btn btn-primary" onclick="goToWishes('mom')">👩 Поздравления для МАМЫ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Страница поздравлений для сестры -->
+    <div class="wishes-page sister" id="wishesPageSister">
+        <button class="back-btn" onclick="backToMain()">← Назад</button>
+        
+        <div class="wishes-header">
+            <h2 class="wishes-title">Для любимой СЕСТРЫ 👯‍♀️</h2>
+            <p style="font-size: 1.2rem; color: #ff1493; margin-top: 10px;">С 8 Марта! 💕</p>
+        </div>
+
+        <div class="wishes-grid">
+            <div class="wish-card">
+                <p class="wish-text">"Моя вторая половинка, мой самый верный друг! В этот прекрасный день хочу сказать, что ты — лучшая сестра на свете. Спасибо за твой смех, за то, что ты всегда со мной, за твою поддержку и веру в меня. Пусть твоя жизнь будет наполнена радостью и любовью! 🌷"</p>
+                <p class="wish-author">— С любовью ❤️</p>
+            </div>
+
+            <div class="wish-card">
+                <p class="wish-text">"8 Марта — это день, когда весь мир должен знать, какая ты классная! Умная, красивая, добрая и просто волшебная! Спасибо за то, что ты есть в моей жизни. Ты делаешь мир ярче и интереснее. Счастья тебе безграничного! 🌸"</p>
+                <p class="wish-author">— Твоя семья 💗</p>
+            </div>
+
+            <div class="wish-card">
+                <p class="wish-text">"Лучшей сестры я не найду в этом мире! Ты — мой идеал женщины: сильная, умная, красивая и с золотым сердцем. Спасибо за каждый момент, проведённый с тобой. Пусть этот день и весь год будут наполнены яркими красками счастья! 💐"</p>
+                <p class="wish-author">— Счастья и улыбок 😊</p>
+            </div>
+        </div>
+
+        <!-- Секция подарков для сестры -->
+        <div class="gifts-section">
+            <h3 class="gifts-title">Идеи для подарков 🎁</h3>
+            
+            <div class="gifts-grid">
+                <div class="gift-card">
+                    <span class="gift-emoji">📱</span>
+                    <div class="gift-name">iPhone 15 Pro Max</div>
+                    <div class="gift-price">~150 000 ₽</div>
+                </div>
+
+                <div class="gift-card">
+                    <span class="gift-emoji">🌪️</span>
+                    <div class="gift-name">Dyson V15 Detect</div>
+                    <div class="gift-price">~140 000 ₽</div>
+                </div>
+
+                <div class="gift-card">
+                    <span class="gift-emoji">⌚</span>
+                    <div class="gift-name">Apple Watch Ultra</div>
+                    <div class="gift-price">~120 000 ₽</div>
+                </div>
+
+                <div class="gift-card">
+                    <span class="gift-emoji">💎</span>
+                    <div class="gift-name">Золотое украшение</div>
+                    <div class="gift-price">~100 000 ₽</div>
+                </div>
+
+                <div class="gift-card">
+                    <span class="gift-emoji">👜</span>
+                    <div class="gift-name">Премиум сумка</div>
+                    <div class="gift-price">~80 000 ₽</div>
+                </div>
+
+                <div class="gift-card">
+                    <span class="gift-emoji">🎧</span>
+                    <div class="gift-name">AirPods Pro Max</div>
+                    <div class="gift-price">~80 000 ₽</div>
+                </div>
+
+                <div class="gift-card">
+                    <span class="gift-emoji">💄</span>
+                    <div class="gift-name">Косметика премиум</div>
+                    <div class="gift-price">~50 000 ₽</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Страница поздравлений для мамы -->
+    <div class="wishes-page mom" id="wishesPageMom">
+        <button class="back-btn" onclick="backToMain()">← Назад</button>
+        
+        <div class="wishes-header">
+            <h2 class="wishes-title">Для любимой МАМЫ 👩</h2>
+            <p style="font-size: 1.2rem; color: #ff8c00; margin-top: 10px;">С 8 Марта! 💕</p>
+        </div>
+
+        <div class="wishes-grid">
+            <div class="wish-card">
+                <p class="wish-text">"Мама, ты — королева нашей семьи! В этот чудесный день хочу поблагодарить тебя за всё: за твою безусловную любовь, за жертвы, за теплоту твоего сердца. Ты вдохновляешь меня каждый день. Спасибо, что ты есть! С 8 Марта, королева! 👑"</p>
+                <p class="wish-author">— С любовью ❤️</p>
+            </div>
+
+            <div class="wish-card">
+                <p class="wish-text">"Мама, твоя любовь — это мой самый сильный оберег в этом мире. Спасибо за то, что ты держишь нашу семью, за твой бесценный совет и поддержку. Ты — настоящая королева красоты и мудрости. Пусть жизнь дарует тебе столько же радости, сколько ты даёшь нам! 🌹"</p>
+                <p class="wish-author">— Твой гордый ребёнок 💗</p>
+            </div>
+
+            <div class="wish-card">
+                <p class="wish-text">"Мама, слова благодарности так малы для того, чтобы выразить мою любовь. Ты — воплощение доброты, силы и красоты. Ты учишь меня быть лучше каждый день. С 8 Марта! Пусть этот год будет твоим самым счастливым! 💐"</p>
+                <p class="wish-author">— Счастья и здоровья 😊</p>
+            </div>
+        </div>
+
+        <!-- Секция подарков для мамы -->
+        <div class="gifts-section">
+            <h3 class="gifts-title">Идеи для подарков 🎁</h3>
+            
+            <div class="gifts-grid">
+                <div class="gift-card">
+                    <span class="gift-emoji">📱</span>
+                    <div class="gift-name">iPhone 15 Pro Max</div>
+                    <div class="gift-price">~150 000 ₽</div>
+                </div>
+
+                <div class="gift-card">
+                    <span class="gift-emoji">🌪️</span>
+                    <div class="gift-name">Dyson V15 Detect</div>
+                    <div class="gift-price">~140 000 ₽</div>
+                </div>
+
+                <div class="gift-card">
+                    <span class="gift-emoji">⌚</span>
+                    <div class="gift-name">Apple Watch Ultra</div>
+                    <div class="gift-price">~120 000 ₽</div>
+                </div>
+
+                <div class="gift-card">
+                    <span class="gift-emoji">💎</span>
+                    <div class="gift-name">Золотое украшение</div>
+                    <div class="gift-price">~100 000 ₽</div>
+                </div>
+
+                <div class="gift-card">
+                    <span class="gift-emoji">👜</span>
+                    <div class="gift-name">Премиум сумка</div>
+                    <div class="gift-price">~80 000 ₽</div>
+                </div>
+
+                <div class="gift-card">
+                    <span class="gift-emoji">🧴</span>
+                    <div class="gift-name">Премиум косметика</div>
+                    <div class="gift-price">~70 000 ₽</div>
+                </div>
+
+                <div class="gift-card">
+                    <span class="gift-emoji">🍽️</span>
+                    <div class="gift-name">Набор люкс посуды</div>
+                    <div class="gift-price">~60 000 ₽</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Создание падающих цветов для 8 марта
+        function createFlower() {
+            const flowers = ['🌷', '🌹', '🌸', '💐', '🌼'];
+            const rose = document.createElement('div');
+            rose.className = 'rose';
+            rose.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+            rose.style.left = Math.random() * 100 + '%';
+            rose.style.animationDuration = (5 + Math.random() * 5) + 's';
+            
+            document.getElementById('rosesContainer').appendChild(rose);
+            
+            setTimeout(() => rose.remove(), 10000);
+        }
+
+        // Создавать цветы каждые 0.5 секунды
+        setInterval(createFlower, 500);
+
+        // Переход на страницу поздравлений
+        function goToWishes(person) {
+            document.getElementById('mainPage').style.display = 'none';
+            if (person === 'sister') {
+                document.getElementById('wishesPageSister').classList.add('active');
+            } else if (person === 'mom') {
+                document.getElementById('wishesPageMom').classList.add('active');
+            }
+            document.body.style.overflow = 'auto';
+        }
+
+        // Возврат на главную
+        function backToMain() {
+            document.getElementById('mainPage').style.display = 'flex';
+            document.getElementById('wishesPageSister').classList.remove('active');
+            document.getElementById('wishesPageMom').classList.remove('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Начальное создание цветов
+        for (let i = 0; i < 5; i++) {
+            setTimeout(createFlower, i * 200);
+        }
+    </script>
+</body>
+</html>
